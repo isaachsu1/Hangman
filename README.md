@@ -8,5 +8,5 @@ Current file download requirements:
 How to run the code:
 1. Copy and paste the code into a new python idle file.
 2. Download "HangmanBNW" and save it within your computer.
-3. change "C:/Users/isaac/Desktop/Newton's Grove/ICS4U/HangmanBNW.jpg" in line 18 to what you have named HangmanBNW in your computer.
+3. change "C:/Users/isaac/Desktop/Newton's Grove/ICS4U/HangmanBNW.jpg" in line 30 to what you have named HangmanBNW in your computer.
 4. Run the code.
