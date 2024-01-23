@@ -13,3 +13,8 @@ How to run the code:
 
 
 How to play:
+1. The game starts with separate lines which indicate the number of letters in the word
+2. The player will have 6 attempts at guessing possible letters or attempts at the correct word
+3. If the player cannot guess the correct word or all the letters they lose
+4. If the player is able to guess the word or all the letters they win
+  
