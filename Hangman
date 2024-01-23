@@ -8,28 +8,27 @@ Y = 800
 
 # create the display surface object
 # of specific dimension..e(X, Y).
-#Set up timer
+# Set up timer
 scrn = pygame.display.set_mode((X, Y))
-timer = pygame.time.Clock() 
-
+timer = pygame.time.Clock()
 
 # set the pygame window name
 pygame.display.set_caption('Hangman')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-# Keep a track of active variable 
+# Keep a track of active variable
 bg_active_color = black
 scrn.fill(black)
-  
-# custom user event to change color 
-press_start = pygame.USEREVENT + 1
 
+# custom user event to change color
+press_start = pygame.USEREVENT + 1
+#press_start1 = pygame.USEREVENT + 2
 
 # create a surface object, image is drawn on it.
-imp = pygame.image.load("C:/Users/isaac/Desktop/Newton's Grove/ICS4U/HangmanBNW.jpg").convert()
+imp = pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/venv/hangmanimage.jpg").convert()
 
-#Add image
+# Add image
 scrn.blit(imp, (344, 0))
 
 # Create a font file by passing font file
@@ -37,12 +36,11 @@ scrn.blit(imp, (344, 0))
 font1 = pygame.font.SysFont('freesanbold.ttf', 200)
 font2 = pygame.font.SysFont('chalkduster.ttf', 50)
 font3 = pygame.font.SysFont('chalkduster.ttf', 25)
-                            
+
 # Render the texts that you want to display
 text1 = font1.render('Hangman', True, (255, 0, 0))
 text2 = font2.render("By Isaac and Arshbir", True, (white))
 text3 = font3.render("Press Space Bar", True, (white))
-
 
 # create a rectangular object for the
 # text surface object
@@ -56,54 +54,63 @@ textRect1.center = (600, 600)
 # setting center for the second text
 textRect2.center = (600, 525)
 
-#setting center for the third text
+# setting center for the third text
 textRect3.center = (600, 700)
 
-#Generate text
+# Generate text
 scrn.blit(text1, textRect1)
 scrn.blit(text2, textRect2)
 
-# posting a event to switch color after  
-# every 500ms 
+# posting a event to switch color after
+# every 500ms
 pygame.time.set_timer(press_start, 500)
 
-
 # paint screen one time
-#pygame.display.flip()
+# pygame.display.flip()
 status = True
 while status:
 
-    # checks which all events are posted 
-    # and based on that perform required 
-    # operations 
-    for event in pygame.event.get(): 
-        
-        # switching colours after every 
-        # 500ms 
-        if event.type == press_start:
-            scrn.blit(text3, textRect3)
-            if bg_active_color == black: 
-                text3 = font3.render("Press Space Bar", True, (white))
-                bg_active_color = white 
-            elif bg_active_color == white: 
-                text3 = font3.render("Press Space Bar", True, (black))
-                bg_active_color = black 
+    # checks which all events are posted
+    # and based on that perform required
+    # operations
+    for event in pygame.event.get():
 
-  # iterate over the list of Event objects
-  # that was returned by pygame.event.get() method.
-   # for i in pygame.event.get():
+        # switching colours after every
+        # 500ms
+     if event.type == press_start:
+            scrn.blit(text3, textRect3)
+            scrn.blit(text2, textRect2)
+            if bg_active_color == white:
+                text3 = font3.render("Press Space Bar", True, (black))
+                text2 = font2.render("By Isaac and Arshbir", True, (black))
+                bg_active_color = black
+            elif bg_active_color == black:
+                text3 = font3.render("Press Space Bar", True, (white))
+                text2 = font2.render("By Isaac and Arshbir ", True, (white))
+                bg_active_color = white
+
+
+
+
+
+
+            # iterate over the list of Event objects
+        # that was returned by pygame.event.get() method.
+        # for i in pygame.event.get():
 
         # if event object type is QUIT
         # then quitting the pygame
         # and program both.
-        if event.type == pygame.QUIT:
-            status = False
-   
-    # Updating Screen 
-    pygame.display.update() 
-      
-    # Setting Frames per Second 
-    timer.tick(30) 
+    if event.type == pygame.QUIT:
+       status = False
+
+    # Updating Screen
+    pygame.display.update()
+
+    # Setting Frames per Second
+    timer.tick(30)
+
+
 
 # deactivates the pygame library
 pygame.quit()
