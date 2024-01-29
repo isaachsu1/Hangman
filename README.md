@@ -10,10 +10,11 @@ Hangman instructions
 
 
 How to run the code:
-1. Copy and paste the code into a new python idle file.
-2. Download "HangmanBNW" and save it within your computer.
-3. change "C:/Users/isaac/Desktop/Newton's Grove/ICS4U/HangmanBNW.jpg" in line 29 to what you have named HangmanBNW in your computer and
-   change "C:/Users/isaac/Desktop/Newton's Grove/ICS4U/Hangman instructions.jpg" in line 107 to what you have named in your computer.
+1. Create a new folder on your desktop called "Hangman".
+2. Copy and paste the code into a new python idle files saved within "Hangman" folder.
+3. Download "HangmanBNW" and "Hangman instructions.jpg" and save them within the "Hangman" file.
+4. change "C:/Users/isaac/Desktop/Hangman/HangmanBNW.jpg" in line 29 in file "Hangman Title Screen" to what you have named "HangmanBNW" in your computer and
+   change "C:/Users/isaac/Desktop/Hangman/ICS4U/Hangman instructions.jpg" in line 30 in file "Hangmaninstructions" to what you have named "Hangman instructions" in your computer.
 5. Run the code.
 
 
