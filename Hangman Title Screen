@@ -1,6 +1,7 @@
 # importing required library
 import pygame
 import sys
+import time
 
 # activate the pygame library .
 pygame.init()
@@ -26,19 +27,19 @@ scrn.fill(black)
 press_start = pygame.USEREVENT + 1
 
 # create a surface object, image is drawn on it.
-imp = pygame.image.load("C:/Users/isaac/Desktop/Newton's Grove/ICS4U/HangmanBNW.jpg").convert()
+imp = pygame.image.load("C:/Users/isaac/Desktop/Hangman/HangmanBNW.jpg").convert()
 
 # Add image
 scrn.blit(imp, (344, 0))
 
 # Create a font file by passing font file
 # and size of the font
-font1 = pygame.font.SysFont('freesanbold.ttf', 200)
+font1 = pygame.font.SysFont('freesanbold.ttf', 150)
 font2 = pygame.font.SysFont('chalkduster.ttf', 50)
 font3 = pygame.font.SysFont('chalkduster.ttf', 25)
 
 # Render the texts that you want to display
-text1 = font1.render('Hangman', True, (255, 0, 0))
+text1 = font1.render('CompSci Hangman', True, (255, 0, 0))
 text2 = font2.render("By Isaac and Arshbir", True, (white))
 text3 = font3.render("Press Space Bar", True, (white))
 
@@ -103,10 +104,9 @@ while status:
         if event.type == pygame.KEYDOWN:
             #Start the game
             if event.key == pygame.K_SPACE:
-                #Display instructions
-                imp = pygame.image.load("C:/Users/isaac/Desktop/Newton's Grove/ICS4U/Hangman instructions.jpg").convert()
-                scrn.blit(imp, (344,0))
-
+                from Hangmaninstructions.py import *
+                status = False
+                
     # Updating Screen
     pygame.display.update()
 
