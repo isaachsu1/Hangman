@@ -1,0 +1,103 @@
+# importing required library
+import pygame
+import sys
+import time
+
+# activate the pygame library .
+pygame.init()
+X = 1200
+Y = 800
+
+# create the display surface object
+# of specific dimension..e(X, Y).
+# Set up timer
+scrn = pygame.display.set_mode((X, Y))
+timer = pygame.time.Clock()
+
+# set the pygame window name
+pygame.display.set_caption('Hangman instructions')
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# Keep a track of active variable
+bg_active_color = black
+scrn.fill(black)
+
+# custom user event to start game
+play = pygame.USEREVENT + 1
+
+# create a surface object, image is drawn on it.
+imp = pygame.image.load("C:/Users/isaac/Desktop/Hangman/Hangman instructions.jpg").convert()
+
+# Add image
+scrn.blit(imp, (344, 0))
+
+# Create a font file by passing font file
+# and size of the font
+font1 = pygame.font.SysFont('chalkduster.ttf', 25)
+
+# Render the texts that you want to display
+text1 = font1.render("Press Space to Continue", True, (white))
+
+# create a rectangular object for the
+# text surface object
+textRect1 = text1.get_rect()
+
+# setting center for the third text
+textRect1.center = (600, 700)
+
+# Generate text
+scrn.blit(text1, textRect1)
+
+# posting a event to switch color after
+# every 500ms
+pygame.time.set_timer(play, 500)
+
+# paint screen one time
+# pygame.display.flip()
+status = True
+while status:
+
+    # checks which all events are posted
+    # and based on that perform required
+    # operations
+    
+    for event in pygame.event.get():
+
+        # switching colours after every
+        # 500ms
+        if event.type == play:
+            scrn.blit(text1, textRect1)
+            if bg_active_color == white:
+                text1 = font1.render("Press Space to Continue", True, (black))
+                bg_active_color = black
+            elif bg_active_color == black:
+                text1 = font1.render("Press Space to Continue", True, (white))
+                bg_active_color = white
+        
+            # iterate over the list of Event objects
+        # that was returned by pygame.event.get() method.
+        # for i in pygame.event.get():
+
+        # if event object type is QUIT
+        # then quitting the pygame
+        # and program both.
+        if event.type == pygame.QUIT:
+            
+           status = False
+
+        if event.type == pygame.KEYDOWN:
+            #Start the game
+            if event.key == pygame.K_SPACE:
+                status = False
+
+    # Updating Screen
+    pygame.display.update()
+
+    # Setting Frames per Second
+    timer.tick(30)
+
+
+
+# deactivates the pygame library
+pygame.quit()
