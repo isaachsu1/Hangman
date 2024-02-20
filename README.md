@@ -28,10 +28,9 @@ Gallow6
 How to run the code:
 1. Create a new folder on your desktop called "Hangman".
 2. Copy and paste the code into a new python idle files saved within "Hangman" folder.
-3. Download "HangmanBNW" and "Hangman instructions.jpg" and save them within the "Hangman" file.
-4. Change "C:/Users/isaac/Desktop/Hangman/HangmanBNW.jpg" in line 29 in file "Hangman Title Screen" to what you have named "HangmanBNW" in your computer.
-5. Change "C:/Users/isaac/Desktop/Hangman/ICS4U/Hangman instructions.jpg" in line 30 in file "Hangmaninstructions" to what you have named "Hangman instructions" in your computer.
-6. Run the code.
+3. Download all the images and save them within the "Hangman" folder.
+4. Change all file names within the pygame files to their names within your computer.
+5. Run the code.
 
 
 How to play:
