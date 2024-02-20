@@ -1,0 +1,268 @@
+# Import necessary libraries
+import pygame  # Pygame library for game development
+import random  # Random module for generating random numbers
+
+# Set up the game window
+pygame.display.set_caption('Hangman')  # Set the title of the game window
+pygame.init()  # Initialize pygame
+
+# Define window dimensions
+winHeight = 800
+winWidth = 1200
+
+# Create the game window with specified dimensions
+win = pygame.display.set_mode((winWidth, winHeight))
+
+# Define color constants
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Define fonts for buttons and text
+btn_font = pygame.font.SysFont("freesanbold.ttf", 20)
+guess_font = pygame.font.SysFont("chalkduster.ttf", 24)
+lost_font = pygame.font.SysFont('chalkduster.ttf', 45)
+
+# Initialize game variables
+word = ''  # Store the word to be guessed
+buttons = []  # Store information about letter buttons
+guessed = []  # Store letters guessed by the player
+hangmanPics = (
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman1.jpg").convert(),
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman2.jpg"),
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman3.jpg"),
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman4.jpg"),
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman5.jpg"),
+    pygame.image.load("/Users/arshbirchahal/PycharmProjects/pythonProject/hangman6.jpg").convert()
+)  # List of images for the hangman drawing
+limbs = 0  # Number of incorrect guesses
+
+# Function to redraw the game window
+def redraw_game_window():
+    global guessed, hangmanPics, limbs
+    win.fill(BLACK)  # Fill the window with black color
+
+    # Draw letter buttons
+    for i in range(len(buttons)):
+        if buttons[i][4]:
+            pygame.draw.circle(win, BLACK, (buttons[i][1], buttons[i][2]), buttons[i][3])
+            pygame.draw.circle(win, buttons[i][0], (buttons[i][1], buttons[i][2]), buttons[i][3] - 2)
+            label = btn_font.render(chr(buttons[i][5]), 1, BLACK)
+            win.blit(label, (buttons[i][1] - (label.get_width() / 2), buttons[i][2] - (label.get_height() / 2)))
+
+    # Display the word with guessed letters
+    # Generate the spaced out word with guessed letters
+    spaced = spacedOut(word, guessed)
+
+    # Render the spaced out word onto a surface using the guess_font
+    label1 = guess_font.render(spaced, 1, BLACK)
+
+    # Get the rectangle representing the dimensions of the rendered text
+    rect = label1.get_rect()
+
+    # Get the width of the rendered text
+    length = rect[2]
+
+    # Display the rendered text on the game window
+    # Center the text horizontally and position it at the vertical coordinate 400 pixels from the top
+    win.blit(label1, (winWidth / 2 - length / 2, 400))
+
+    # Display the hangman image corresponding to the current number of incorrect guesses (limbs)
+    # Get the hangman image corresponding to the current number of incorrect guesses
+    pic = hangmanPics[limbs]
+
+    # Display the hangman image on the game window
+    # Center the image horizontally and position it at the vertical coordinate 150 pixels from the top
+    win.blit(pic, (winWidth / 2 - pic.get_width() / 2 + 20, 150))
+
+    # Update the display
+    pygame.display.update()
+
+# Function to choose a random word from a file
+# Function to randomly select a word from a text file
+def randomWord():
+    # Open the file containing the list of words
+    file = open("words.txt")
+
+    # Read all the lines from the file and store them in a list
+    f = file.readlines()
+
+    # Generate a random index within the range of the number of words in the list
+    i = random.randrange(0, len(f) - 1)
+
+    # Return a randomly chosen word from the list, removing the newline character at the end
+    return f[i][:-1]
+
+
+# Function to check if a guessed letter is not in the word
+def hang(guess):
+    global word  # Access the global variable 'word' that stores the target word
+    # Check if the guessed letter (converted to lowercase) is not present in the target word (also converted to lowercase)
+    if guess.lower() not in word.lower():
+        return True  # Return True if the guessed letter is not in the word
+    else:
+        return False  # Return False if the guessed letter is in the word
+
+
+# Function to display the word with spaces for guessed letters
+# Define the function spacedOut with parameters word (the word to be guessed) and guessed (list of guessed letters, defaults to empty list)
+def spacedOut(word, guessed=[]):
+    spacedWord = ''  # Initialize an empty string to store the spaced out word
+    guessedLetters = guessed  # Copy the list of guessed letters to a local variable
+
+    # Iterate over each character in the word
+    for x in range(len(word)):
+        if word[x] != ' ':  # If the character is not a space
+            spacedWord += '_ '  # Add an underscore followed by a space to represent a letter placeholder
+
+            # Check if the current letter has been guessed
+            for i in range(len(guessedLetters)):
+                if word[x].upper() == guessedLetters[i]:  # If the guessed letter matches the current letter in the word
+                    spacedWord = spacedWord[:-2]  # Remove the last underscore and space
+                    spacedWord += word[x].upper() + ' '  # Add the guessed letter in uppercase followed by a space
+        elif word[x] == ' ':  # If the character is a space
+            spacedWord += ' '  # Add a space to maintain word spacing
+
+    return spacedWord  # Return the spaced out word
+
+
+# Function to check if a button is clicked
+# Define the function buttonHit with parameters x and y (the coordinates of the mouse click)
+def buttonHit(x, y):
+    # Iterate over each button in the buttons list
+    for i in range(len(buttons)):
+        # Check if the mouse click coordinates (x, y) fall within the boundaries of the current button
+        if x < buttons[i][1] + 20 and x > buttons[i][1] - 20 and y < buttons[i][2] + 20 and y > buttons[i][2] - 20:
+            return buttons[i][5]  # If the mouse click is within the boundaries of the button, return the ASCII value of the button (letter)
+    return None  # If the mouse click is not within the boundaries of any button, return None
+
+
+# Function to end the game (either in win or loss)
+def end(winner=False):
+    global limbs
+    lostTxt = 'You Lost, press any key to play again...'
+    winTxt = 'WINNER!, press any key to play again...'
+
+    redraw_game_window()
+    pygame.time.delay(1000)
+    win.fill(BLACK)
+
+    # Display appropriate message based on win or loss
+    if winner == True:
+        label = lost_font.render(winTxt, 1, RED)
+    else:
+        label = lost_font.render(lostTxt, 1, RED)
+
+    wordTxt = lost_font.render(word.upper(), 1, RED)
+    wordWas = lost_font.render('The phrase was: ', 1, RED)
+
+    # Display the word that the player was supposed to guess
+    win.blit(wordTxt, (winWidth / 2 - wordTxt.get_width() / 2, 295))
+
+    # Display a message indicating what the phrase was
+    win.blit(wordWas, (winWidth / 2 - wordWas.get_width() / 2, 245))
+
+    # Display a message indicating whether the player won or lost
+    win.blit(label, (winWidth / 2 - label.get_width() / 2, 140))
+
+    # Update the display to show the messages
+    pygame.display.update()
+
+    # Set a flag to True to indicate that the game should prompt the player to play again
+    again = True
+
+    # Enter a loop to wait for the player to press a key to play again or quit the game
+    while again:
+        for event in pygame.event.get():  # Iterate over the events in the event queue
+            if event.type == pygame.QUIT:  # If the player closes the window, quit the game
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:  # If the player presses a key
+                again = False  # Set the flag to False to exit the loop
+
+    # Reset the game to its initial state to start a new game
+    reset()
+
+
+# Function to reset the game
+# Function to reset the game state
+def reset():
+    global limbs, guessed, buttons, word  # Declare global variables to be modified
+
+    # Reset the visibility of all letter buttons
+    for i in range(len(buttons)):
+        buttons[i][4] = True  # Set the visibility flag to True for all buttons
+
+    # Reset game variables
+    limbs = 0  # Reset the number of incorrect guesses
+    guessed = []  # Clear the list of guessed letters
+    word = randomWord()  # Generate a new random word for the game
+
+
+# Calculate the x and y positions of the buttons
+# Calculate the horizontal spacing between each letter button
+increase = round(winWidth / 13)  # Calculate the spacing based on the window width and the number of buttons
+
+# Loop through each of the 26 letters of the alphabet to create buttons for each letter
+for i in range(26):
+    if i < 13:  # If the index is less than 13 (first half of the alphabet)
+        y = 40  # Set the vertical position to 40 pixels from the top of the window
+        x = 25 + (increase * i)  # Calculate the horizontal position based on the index and spacing
+    else:  # If the index is 13 or greater (second half of the alphabet)
+        x = 25 + (increase * (i - 13))  # Calculate the horizontal position based on the adjusted index and spacing
+        y = 85  # Set the vertical position to 85 pixels from the top of the window
+
+    # Append information about the button to the buttons list
+    # Each button is represented as a list containing its color, x and y positions, radius, visibility, and ASCII value
+    buttons.append([RED, x, y, 20, True, 65 + i])
+    # RED: Color of the button
+    # x, y: Position of the button on the window
+    # 20: Radius of the button
+    # True: Visibility flag indicating whether the button is visible
+    # 65 + i: ASCII value of the corresponding letter (A is 65, B is 66, and so on)
+
+
+# Choose a random word to start the game
+word = randomWord()
+inPlay = True
+
+# Main game loop
+while inPlay:
+    redraw_game_window()
+    pygame.time.delay(10)
+
+    # Event handling loop
+    # Event handling loop to capture user input
+    for event in pygame.event.get():  # Iterate through each event in the event queue
+        if event.type == pygame.QUIT:  # Check if the user clicks the close button
+            inPlay = False  # Set inPlay flag to False to exit the game loop
+        if event.type == pygame.KEYDOWN:  # Check if a key is pressed
+            if event.key == pygame.K_ESCAPE:  # Check if the Esc key is pressed
+                inPlay = False  # Set inPlay flag to False to exit the game loop
+        if event.type == pygame.MOUSEBUTTONDOWN:  # Check if the mouse button is pressed
+            clickPos = pygame.mouse.get_pos()  # Get the position of the mouse click
+            letter = buttonHit(clickPos[0], clickPos[1])  # Check if a button is clicked
+            if letter != None:  # If a button is clicked
+                guessed.append(chr(letter))  # Add the guessed letter to the list of guessed letters
+                buttons[letter - 65][4] = False  # Disable the button that was clicked
+                if hang(chr(letter)):  # If the guessed letter is not in the word
+                    if limbs != 5:  # If the number of incorrect guesses is less than 6
+                        limbs += 1  # Increment the number of incorrect guesses
+                    else:
+                        end()  # End the game (player lost)
+                else:  # If the guessed letter is in the word
+                    print(spacedOut(word, guessed))  # Print the current state of the word with guessed letters
+                    if spacedOut(word, guessed).count('_') == 0:  # If all letters are guessed
+                        end(True)  # End the game (player won)
+
+
+if event.type == pygame.QUIT:
+            status = False
+
+        # The game
+
+        # Start the game
+
+
+    # Updating Screen
+pygame.display.update()
+pygame.quit()  # Quit pygame and close the game window
